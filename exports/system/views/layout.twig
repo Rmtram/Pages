@@ -5,7 +5,7 @@
   <script src="{{ app.request.baseUrl ~ '/assets/js/jquery.min.js' }}"></script>
   <script src="{{ app.request.baseUrl ~ '/assets/js/bootstrap.min.js' }}"></script>
   <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/assets/css/bootstrap.min.css' }}"/>
-  <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/assets/css/bootstrap-theme.min.css' }}"/>
+  <link rel="stylesheet" href="{{ app.request.baseUrl ~ '/assets/css/style.css' }}"/>
   <title>Pages Admin.</title>
 </head>
 <body>
@@ -15,10 +15,7 @@
     {% block contents %}{% endblock %}
   </div>
   <div class="col-md-3">
-    <ul class="nav nav-pills nav-stacked">
-      <li role="presentation"><a href="#">ページ管理</a></li>
-      <li role="presentation"><a href="#">ナビゲーション管理</a></li>
-    </ul>
+    {{ include('navigation.twig') }}
   </div>
 </div>
 {{ include('footer.twig') }}

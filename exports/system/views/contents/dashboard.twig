@@ -1,5 +1,8 @@
 {% extends 'layout.twig' %}
 
 {% block contents %}
-
+  <h2>ページ一覧</h2>
+  {% for page in pages %}
+    {{ page.name }}
+  {% endfor %}
 {% endblock %}

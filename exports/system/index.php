@@ -20,7 +20,11 @@ $app->register(new Silex\Provider\TwigServiceProvider, [
 ]);
 
 $app->get('/', function() use($app) {
-    return $app['twig']->render('contents/dashboard.twig');
+    /** @var Connector $connector */
+    $connector = $app['connector'];
+    $menus = $connector->connection('menus')->all();
+    $pages = $connector->connection('page')->all();
+    return $app['twig']->render('contents/dashboard.twig', compact('pages', 'menus'));
 });
 
 $app->get('/pages/index', function() use($app) {
