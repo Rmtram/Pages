@@ -1,16 +1,26 @@
 <?php
 
+require __DIR__ . '/../vendor/autoload.php';
+
 use Rmtram\SimpleTextDb\Connector;
 use Rmtram\SimpleTextDb\Driver\ListDriver;
 
 $app = new \Silex\Application();
 
+$app['debug'] = true;
+
 $app['connector'] = function() {
     return new Connector(__DIR__ . '/database/');
 };
 
-$app->get('/', function() use($app) {
+$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
+$app->register(new Silex\Provider\TwigServiceProvider, [
+    'twig.path' => __DIR__ . '/views',
+]);
+
+$app->get('/', function() use($app) {
+    return $app['twig']->render('contents/dashboard.twig');
 });
 
 $app->get('/pages/index', function() use($app) {
