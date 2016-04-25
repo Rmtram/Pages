@@ -4,6 +4,12 @@
     "rmtram/simple-text-db": "~1.0",
     "twig/twig": "~1.24",
     "symfony/twig-bridge": "~3.0",
-    "erusev/parsedown": "~1.6"
+    "erusev/parsedown": "~1.6",
+    "vlucas/valitron": "~1.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Rmtram\\Pages\\System\\": "system/src"
+    }
   }
 }
