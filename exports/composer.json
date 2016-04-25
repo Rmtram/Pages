@@ -1,0 +1,6 @@
+{
+  "require": {
+    "silex/silex": "~1.3",
+    "rmtram/simple-text-db": "~1.0"
+  }
+}

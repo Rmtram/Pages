@@ -1,0 +1,4 @@
+#!/usr/bin/env php
+<?php
+
+$app = new \Symfony\Component\Console\Application('');
