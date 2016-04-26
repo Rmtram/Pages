@@ -1,0 +1,17 @@
+{% if errors is defined and not errors is empty %}
+  <div class="alert alert-danger">
+    {% if errors is iterable %}
+      {% for error in errors %}
+        {% if error is iterable %}
+          {% for err in error %}
+            <p>{{ err }}</p>
+          {% endfor  %}
+        {% else %}
+          <p>{{ error }}</p>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <p>{{ errors }}</p>
+    {% endif %}
+  </div>
+{% endif %}

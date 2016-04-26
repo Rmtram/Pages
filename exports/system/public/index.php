@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 use Rmtram\Pages\System\Controllers\PagesController;
 use Rmtram\SimpleTextDb\Connector;
@@ -10,12 +10,16 @@ $app = new \Silex\Application();
 $app['debug'] = true;
 
 $app['connector'] = function() {
-    return new Connector(__DIR__ . '/database/');
+    return new Connector(__DIR__ . '/../database/');
 };
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider);
 $app->register(new Silex\Provider\TwigServiceProvider, [
-    'twig.path' => __DIR__ . '/views',
+    'twig.path' => __DIR__ . '/../views',
+    'twig.options' => [
+        'cache' => false,
+        'strict_variables' => false
+    ]
 ]);
 
 $app->get('/', function() use($app) {
@@ -23,10 +27,10 @@ $app->get('/', function() use($app) {
     $connector = $app['connector'];
     $menus = $connector->connection('menus')->all();
     $pages = $connector->connection('page')->all();
-    return $app['twig']->render('contents/dashboard.twig', compact('pages', 'menus'));
+    return $app['twig']->render('home/index.twig', compact('pages', 'menus'));
 });
 
-$app->mount('pages', new PagesController());
+$app->mount('pages', new PagesController);
 
 
 $app->run();

@@ -27,8 +27,8 @@ class PagesController extends AbstractController implements ResourcesInterface
      */
     public $routes = [
         'getIndex'   => 'index',
-        'getCreate'  => 'add',
-        'postCreate' => 'add',
+        'getCreate'  => 'create',
+        'postCreate' => 'create',
         'getEdit'    => 'edit/{id}',
         'postEdit'   => 'edit/{id}',
         'getDelete'  => 'delete/{id}',
@@ -39,11 +39,11 @@ class PagesController extends AbstractController implements ResourcesInterface
      * @var array
      */
     private $rules = [
-        'required'   => [['id'], ['name'], ['description'], ['createdAt'], ['updatedAt']],
+        'required'   => [['id'], ['fileName'], ['name'], ['description'], ['createdAt'], ['updatedAt']],
         'alphaNum'   => 'id',
-        'slug'       => 'name',
+        'slug'       => 'fileName',
         'dateFormat' => [['createdAt', 'Y-m-d H:i:s'], ['updatedAt', 'Y-m-d H:i:s']],
-        'lengthMax'  => [['name', 50]]
+        'lengthMax'  => [['name', 50], ['fileName', 50]]
     ];
 
     public function initialize(Application $app)
@@ -59,7 +59,8 @@ class PagesController extends AbstractController implements ResourcesInterface
      */
     public function getIndex(Application $app)
     {
-        return $app->redirect('add');
+        $pages = $this->page->all();
+        return $app['twig']->render('pages/index.twig', compact('pages'));
     }
 
     /**
@@ -81,7 +82,7 @@ class PagesController extends AbstractController implements ResourcesInterface
      */
     public function getCreate(Application $app)
     {
-        return $app['twig']->render('contents/pages/create.twig');
+        return $app['twig']->render('pages/create.twig');
     }
 
     /**
@@ -93,16 +94,18 @@ class PagesController extends AbstractController implements ResourcesInterface
     {
         $now = $this->now();
 
+        $req = $request->request->all();
         $page = array_merge(
             ['id' => Unique::id(), 'createdAt' => $now, 'updatedAt' => $now],
-            $request->request->all()
+            $req
         );
 
         $validator = new Validator($page);
         $validator->rules($this->rules);
 
-        $fail = function($errors) use($app) {
-            $app['twig']->render('pages/create.twig', compact('errors'));
+        $fail = function($errors) use($app, $req) {
+            $page = $req;
+            return $app['twig']->render('pages/create.twig', compact('errors', 'page'));
         };
 
         if (!$validator->validate()) {
@@ -110,15 +113,15 @@ class PagesController extends AbstractController implements ResourcesInterface
         }
 
         $existed = $this->page->find(function(Where $where) use($page) {
-            $where->eq('name', $page['name']);
+            $where->eq('fileName', $page['fileName']);
         })->exists();
 
         if (true === $existed) {
-            $fail([$page['name'] . 'は既に登録されています']);
+            return $fail($page['fileName'] . 'は既に登録されています');
         }
 
         if (!$this->page->add($page)) {
-            return $fail(['作成が出来ませんでした']);
+            return $fail('作成が出来ませんでした');
         }
 
         return $app->redirect('index');
@@ -135,6 +138,12 @@ class PagesController extends AbstractController implements ResourcesInterface
         $page = $this->page->find(function(Where $where) use($id) {
             $where->eq('id', $id);
         })->first();
+
+        if (empty($page)) {
+            return $app->redirect('../index');
+        }
+
+        return $app['twig']->render('pages/edit.twig', compact('page'));
     }
 
     /**
@@ -161,6 +170,7 @@ class PagesController extends AbstractController implements ResourcesInterface
         $this->page->delete(function(Where $where) use($id) {
             $where->eq('id', $id);
         });
+        return $app->redirect('../index');
     }
 
     /**

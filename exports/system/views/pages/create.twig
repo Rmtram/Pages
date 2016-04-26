@@ -1,0 +1,11 @@
+{% extends 'layout.twig' %}
+
+{% block contents %}
+  <div class="page-header">
+    <h2>ページ&nbsp;作成</h2>
+  </div>
+  {% include 'shared/validate.twig' %}
+  <form method="post">
+    {% include 'pages/_form.twig' %}
+  </form>
+{% endblock %}

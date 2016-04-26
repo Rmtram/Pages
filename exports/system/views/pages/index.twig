@@ -1,0 +1,45 @@
+{% extends 'layout.twig' %}
+
+{% block contents %}
+
+  <div class="page-header">
+    <h2>ページ&nbsp;一覧</h2>
+  </div>
+
+  {% for page in pages %}
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table class="table border-less">
+          <tbody>
+          <tr>
+            <th>ID</th>
+            <td>{{ page.id }}</td>
+          </tr>
+          <tr>
+            <th>ファイル名</th>
+            <td>{{ page.fileName }}</td>
+          </tr>
+          <tr>
+            <th>名称</th>
+            <td>{{ page.name }}</td>
+          </tr>
+          <tr>
+            <th>作成日</th>
+            <td>{{ page.createdAt }}</td>
+          </tr>
+          <tr>
+            <th>更新日</th>
+            <td>{{ page.updatedAt }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-footer">
+        <a href="{{ app.request.baseUrl ~ '/pages/show/' ~ page.id }}" class="btn btn-primary">詳細を見る</a>
+        <a href="{{ app.request.baseUrl ~ '/pages/edit/' ~ page.id }}" class="btn btn-success">変更する</a>
+        <a href="{{ app.request.baseUrl ~ '/pages/delete/' ~ page.id }}" class="btn btn-danger">削除する</a>
+      </div>
+    </div>
+  {% endfor %}
+
+{% endblock %}
